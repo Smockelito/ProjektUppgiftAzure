@@ -1,10 +1,26 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "Välkommen";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="hero-section">
+    <div class="hero-overlay">
+        <h1 class="hero-title">Nosework Inspiration</h1>
+        <p class="hero-subtitle">Hitta inspiration och övningar för nosework – hundsportens roligaste gren!</p>
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a asp-page="/Inspiration/Index" class="btn btn-primary btn-lg">🎯 Träningsinspiration</a>
+                <a asp-page="/Exercises/Index" class="btn btn-outline-light btn-lg">📋 Hantera övningar</a>
+            </div>
+        }
+        else
+        {
+            <div class="d-flex gap-3 justify-content-center flex-wrap">
+                <a asp-page="/Account/Login" class="btn btn-primary btn-lg">Logga in</a>
+                <a asp-page="/Account/Register" class="btn btn-outline-light btn-lg">Registrera dig</a>
+            </div>
+        }
+    </div>
 </div>

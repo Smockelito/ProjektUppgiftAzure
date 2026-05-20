@@ -16,9 +16,11 @@ namespace Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<NoseworkDbContext>();
-            optionsBuilder.UseSqlServer(config.GetConnectionString("DefaultConnection"));
+            optionsBuilder.UseSqlServer(
+                config.GetConnectionString("DefaultConnection"),
+                options => options.EnableRetryOnFailure());
 
-            return new NoseworkDbContext(optionsBuilder.Build());
+            return new NoseworkDbContext(optionsBuilder.Options);
         }
     }
 }

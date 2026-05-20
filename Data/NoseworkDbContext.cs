@@ -1,9 +1,11 @@
 ﻿using Data.Ent;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
-    public class NoseworkDbContext : DbContext
+    public class NoseworkDbContext : IdentityDbContext<IdentityUser>
     {
         public NoseworkDbContext(DbContextOptions<NoseworkDbContext> options) : base(options) { }
 
