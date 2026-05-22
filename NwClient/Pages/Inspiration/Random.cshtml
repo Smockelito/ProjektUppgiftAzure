@@ -56,6 +56,10 @@
                         {
                             <img src="@session.ImageUrl" class="card-img-top session-card-img" alt="@session.Name" />
                         }
+                        else if (!string.IsNullOrEmpty(Model.DefaultSessionImageUrl))
+                        {
+                            <img src="@Model.DefaultSessionImageUrl" class="card-img-top session-card-img" alt="Standardbild" />
+                        }
                         else
                         {
                             <div class="session-card-placeholder">

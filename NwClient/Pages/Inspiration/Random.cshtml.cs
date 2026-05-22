@@ -13,6 +13,7 @@ namespace NwClient.Pages.Inspiration
 
         public List<DifficultyContract> Difficulties { get; set; } = new();
         public List<SessionContract> RandomSessions { get; set; } = new();
+        public string? DefaultSessionImageUrl { get; set; }
 
         [BindProperty(SupportsGet = true)]
         public int? SelectedDifficultyId { get; set; }
@@ -30,6 +31,13 @@ namespace NwClient.Pages.Inspiration
             var difficulties = await client.GetFromJsonAsync<List<DifficultyContract>>("api/Difficulty");
             Difficulties = difficulties ?? new();
 
+            try
+            {
+                var defaultImg = await client.GetFromJsonAsync<UrlResult>("api/Image/default-session");
+                DefaultSessionImageUrl = defaultImg?.Url;
+            }
+            catch { }
+
             if (SelectedDifficultyId.HasValue)
             {
                 HasSearched = true;
@@ -43,5 +51,9 @@ namespace NwClient.Pages.Inspiration
         {
             return RedirectToPage(new { SelectedDifficultyId });
         }
+            private class UrlResult
+            {
+                public string? Url { get; set; }
+            }
+        }
     }
-}
