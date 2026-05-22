@@ -4,23 +4,14 @@
     ViewData["Title"] = "Välkommen";
 }
 
-<div class="hero-section">
+<div class="hero-section" style="background-image: url('@Model.HeroImageUrl');">
     <div class="hero-overlay">
         <h1 class="hero-title">Nosework Inspiration</h1>
         <p class="hero-subtitle">Hitta inspiration och övningar för nosework – hundsportens roligaste gren!</p>
-        @if (User.Identity?.IsAuthenticated == true)
-        {
-            <div class="d-flex gap-3 justify-content-center flex-wrap">
-                <a asp-page="/Inspiration/Index" class="btn btn-primary btn-lg">🎯 Träningsinspiration</a>
-                <a asp-page="/Exercises/Index" class="btn btn-outline-light btn-lg">📋 Hantera övningar</a>
-            </div>
-        }
-        else
-        {
-            <div class="d-flex gap-3 justify-content-center flex-wrap">
-                <a asp-page="/Account/Login" class="btn btn-primary btn-lg">Logga in</a>
-                <a asp-page="/Account/Register" class="btn btn-outline-light btn-lg">Registrera dig</a>
-            </div>
-        }
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a asp-page="/Account/Login" class="btn btn-primary btn-lg">Logga in</a>
+            <a asp-page="/Account/Register" class="btn btn-outline-light btn-lg">Registrera dig</a>
+        </div>
     </div>
 </div>
+

@@ -1,15 +1,18 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 
-namespace NwClient.Pages
+namespace NwClient.Pages.Home
 {
-    public class IndexModel : PageModel
+    [Authorize]
+    public class HomeModel : PageModel
     {
         private readonly IHttpClientFactory _httpClientFactory;
 
         public string? HeroImageUrl { get; set; }
 
-        public IndexModel(IHttpClientFactory httpClientFactory)
+        public HomeModel(IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
         }
@@ -17,7 +20,7 @@ namespace NwClient.Pages
         public async Task OnGetAsync()
         {
             var client = _httpClientFactory.CreateClient("NwAPI");
-            var response = await client.GetAsync("api/Image/hero");
+            var response = await client.GetAsync("api/Image/home");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();

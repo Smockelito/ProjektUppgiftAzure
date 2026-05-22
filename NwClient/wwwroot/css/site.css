@@ -32,7 +32,6 @@ body {
 
 /* Hero section */
 .hero-section {
-    background-image: url('https://nwapplicationstorage.blob.core.windows.net/nwapplicationpictures/f6f6ac07-ddf3-4607-a823-3e9b82a5343f.png');
     background-size: cover;
     background-position: center;
     min-height: 480px;
@@ -68,5 +67,64 @@ body {
 @media (max-width: 576px) {
     .hero-title {
         font-size: 2rem;
+    }
+}
+
+/* Welcome section (post-login) */
+.welcome-section {
+    padding: 2rem 0 3rem;
+}
+
+.welcome-heading {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.info-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.info-card {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 0.75rem;
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.info-card:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+}
+
+.info-card-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.info-card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.35rem;
+    color: #343a40;
+}
+
+.info-card-text {
+    font-size: 0.82rem;
+    color: #6c757d;
+}
+
+@media (max-width: 576px) {
+    .info-card-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .welcome-heading {
+        font-size: 1.5rem;
     }
 }

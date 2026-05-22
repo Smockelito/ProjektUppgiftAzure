@@ -18,7 +18,8 @@ namespace NwAPI
 
             // Add services to the container.
             builder.Services.AddDbContext<NoseworkDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+                    sqlOptions => sqlOptions.EnableRetryOnFailure()));
 
             builder.Services.AddScoped<SessionService>();
             builder.Services.AddScoped<DifficultyService>();

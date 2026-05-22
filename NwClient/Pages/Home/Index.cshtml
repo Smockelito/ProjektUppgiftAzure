@@ -1,0 +1,70 @@
+@page
+@model NwClient.Pages.Home.HomeModel
+@using System.Security.Claims
+@{
+    ViewData["Title"] = "Hem";
+    var userEmail = User.FindFirst(ClaimTypes.Email)?.Value ?? User.Identity?.Name;
+    var bgStyle = Model.HeroImageUrl != null
+        ? $"background-image: url('{Html.Raw(Model.HeroImageUrl)}');"
+        : "background-color: #1a1a2e;";
+}
+
+<div class="hero-section" style="@Html.Raw(bgStyle)">
+    <div class="hero-overlay">
+        <h1 class="hero-title"><i class="bi bi-patch-check-fill"></i> Nosework Inspiration</h1>
+        <p class="hero-subtitle">Hitta inspiration och övningar för nosework – hundsportens roligaste gren!</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a asp-page="/Inspiration/Index" class="btn btn-primary btn-lg"><i class="bi bi-stars"></i> Träningsinspiration</a>
+            <a asp-page="/Exercises/Index" class="btn btn-outline-light btn-lg"><i class="bi bi-journal-text"></i> Hantera övningar</a>
+        </div>
+    </div>
+</div>
+
+<div class="welcome-section">
+    <div class="row align-items-center g-4">
+        <div class="col-md-7">
+            <h2 class="welcome-heading">Välkommen tillbaka! <i class="bi bi-hand-wave"></i></h2>
+            @if (!string.IsNullOrEmpty(userEmail))
+            {
+                <p class="text-muted mb-3"><em>Inloggad som @userEmail</em></p>
+            }
+            <p class="lead">
+                Nosework är en hundsport som tränar hundens naturliga sökinstinkt. Hunden lär sig att söka efter
+                specifika dofter och markera när den hittat rätt – ett roligt och mentalt stimulerande samarbete
+                mellan hund och förare!
+            </p>
+            <p>
+                Här hittar du övningar i olika svårighetsgrader, kan hantera dina egna träningssessioner
+                och hämta inspiration för nästa pass.
+            </p>
+            <div class="d-flex gap-3 flex-wrap mt-4">
+                <a asp-page="/Inspiration/Index" class="btn btn-primary"><i class="bi bi-stars"></i> Hitta inspiration</a>
+                <a asp-page="/Exercises/Index" class="btn btn-outline-secondary"><i class="bi bi-journal-text"></i> Mina övningar</a>
+            </div>
+        </div>
+        <div class="col-md-5 text-center">
+            <div class="info-card-grid">
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="bi bi-search"></i></div>
+                    <div class="info-card-title">Sök</div>
+                    <div class="info-card-text">Träna hundens naturliga sökinstinkt med roliga doftövningar</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                    <div class="info-card-title">Progressa</div>
+                    <div class="info-card-text">Välj svårighetsgrad och bygg upp träningen steg för steg</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="bi bi-stars"></i></div>
+                    <div class="info-card-title">Inspireras</div>
+                    <div class="info-card-text">Bläddra bland övningar och slumpa fram nya utmaningar</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="bi bi-pencil-square"></i></div>
+                    <div class="info-card-title">Hantera</div>
+                    <div class="info-card-text">Skapa, redigera och filtrera dina egna träningssessioner</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
