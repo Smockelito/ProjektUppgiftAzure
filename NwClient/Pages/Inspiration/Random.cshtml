@@ -1,0 +1,79 @@
+@page
+@model NwClient.Pages.Inspiration.RandomModel
+@{
+    ViewData["Title"] = "Slumpa övningar";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Alla övningar</a>
+    <h1 class="h2 mb-0"><i class="bi bi-shuffle"></i> Slumpa övningar</h1>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm mb-5">
+            <div class="card-body p-4 text-center">
+                <p class="lead mb-4">Välj en svårighetsgrad så slumpar vi fram tre övningar åt dig!</p>
+                <form method="get" class="d-flex gap-3 justify-content-center align-items-end flex-wrap">
+                    <div class="text-start">
+                        <label class="form-label fw-semibold">Svårighetsgrad</label>
+                        <select name="SelectedDifficultyId" class="form-select">
+                            <option value="">— Välj svårighetsgrad —</option>
+                            @foreach (var d in Model.Difficulties)
+                            {
+                                <option value="@d.Id" selected="@(Model.SelectedDifficultyId == d.Id)">@d.CategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-shuffle"></i> Slumpa!
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (Model.HasSearched)
+{
+    @if (!Model.RandomSessions.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle"></i> Inga övningar hittades för den valda svårighetsgraden.
+        </div>
+    }
+    else
+    {
+        <h2 class="h4 text-center mb-4">
+            <i class="bi bi-stars"></i> Dina tre övningar
+        </h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4 justify-content-center">
+            @foreach (var session in Model.RandomSessions)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow random-card">
+                        @if (!string.IsNullOrEmpty(session.ImageUrl))
+                        {
+                            <img src="@session.ImageUrl" class="card-img-top session-card-img" alt="@session.Name" />
+                        }
+                        else
+                        {
+                            <div class="session-card-placeholder">
+                                <i class="bi bi-image text-muted"></i>
+                            </div>
+                        }
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">@session.Name</h5>
+                            <p class="card-text text-muted flex-grow-1">@session.Description</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="text-center mt-4">
+            <a asp-page="Random" asp-route-SelectedDifficultyId="@Model.SelectedDifficultyId" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-clockwise"></i> Slumpa igen
+            </a>
+        </div>
+    }
+}

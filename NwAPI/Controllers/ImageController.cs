@@ -39,6 +39,16 @@ namespace NwAPI.Controllers
             return Ok(new { url = sasUrl });
         }
 
+        // GET api/Image/default-session
+        [HttpGet("default-session")]
+        public async Task<IActionResult> GetDefaultSession()
+        {
+            var blobName = _config["AzureStorage:DefaultSessionBlobName"]
+                ?? throw new InvalidOperationException("AzureStorage:DefaultSessionBlobName is not configured.");
+            var sasUrl = await _blobService.GetSasUrlAsync(blobName, TimeSpan.FromHours(1));
+            return Ok(new { url = sasUrl });
+        }
+
         // POST api/Image/upload
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(IFormFile file)

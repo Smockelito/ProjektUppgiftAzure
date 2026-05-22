@@ -1,0 +1,149 @@
+@page
+@model NwClient.Pages.Exercises.IndexModel
+@{
+    ViewData["Title"] = "Hantera övningar";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h2 mb-0"><i class="bi bi-journal-text"></i> Hantera övningar</h1>
+    <a asp-page="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Ny övning</a>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-sm-4">
+                <label class="form-label fw-semibold">Svårighetsgrad</label>
+                <select id="filterDifficulty" class="form-select" onchange="applyFilters()">
+                    <option value="">— Alla —</option>
+                    @foreach (var d in Model.Difficulties)
+                    {
+                        <option value="@d.Id" selected="@(Model.FilterDifficultyId == d.Id ? "selected" : null)">@d.CategoryName</option>
+                    }
+                    <option value="none">— Saknar svårighetsgrad —</option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label class="form-label fw-semibold">Sök på namn</label>
+                <input id="filterName" type="text" class="form-control" placeholder="Skriv för att söka..." oninput="applyFilters()" />
+            </div>
+            <div class="col-sm-3">
+                <label class="form-label fw-semibold">Bild</label>
+                <select id="filterImage" class="form-select" onchange="applyFilters()">
+                    <option value="">— Alla —</option>
+                    <option value="yes">Har bild</option>
+                    <option value="no">Saknar bild</option>
+                </select>
+            </div>
+            <div class="col-sm-1 d-flex align-items-end">
+                <button class="btn btn-outline-secondary w-100" onclick="clearFilters()" title="Rensa filter">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (!Model.Sessions.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle"></i> Inga övningar hittades. <a asp-page="Create">Skapa din första övning!</a>
+    </div>
+}
+else
+{
+    <p class="text-muted small mb-2" id="resultCount"></p>
+    <div class="d-flex px-3 py-2 text-muted small fw-semibold border-bottom">
+        <span style="width:250px">Namn</span>
+        <span style="width:180px">Svårighetsgrad</span>
+        <span style="width:90px" class="text-center">Har bild</span>
+        <span style="width:120px"></span>
+    </div>
+    <div class="list-group shadow-sm" id="sessionList">
+        @foreach (var session in Model.Sessions)
+        {
+            <div class="list-group-item list-group-item-action d-flex justify-content-start align-items-center py-3 session-row"
+                 data-name="@session.Name.ToLower()"
+                 data-difficulties="@string.Join(",", session.DifficultyIds)"
+                 data-has-difficulty="@(session.DifficultyIds.Any() ? "yes" : "no")"
+                 data-has-image="@(!string.IsNullOrEmpty(session.ImageUrl) ? "yes" : "no")">
+                <div style="width:250px" class="min-width-0 text-truncate">
+                    <h6 class="mb-0 fw-semibold text-truncate" title="@session.Name">@session.Name</h6>
+                </div>
+                <div style="width:180px" class="d-flex align-items-center gap-1 flex-wrap">
+                    @if (session.DifficultyIds.Any())
+                    {
+                        @foreach (var diffId in session.DifficultyIds)
+                        {
+                            var diffName = Model.Difficulties.FirstOrDefault(d => d.Id == diffId)?.CategoryName ?? diffId.ToString();
+                            <span class="badge bg-secondary">@diffName</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted small fst-italic">Saknas</span>
+                    }
+                </div>
+                <div style="width:90px" class="d-flex justify-content-center">
+                    <input type="checkbox" disabled checked="@(!string.IsNullOrEmpty(session.ImageUrl))" class="form-check-input mt-0" title="@(!string.IsNullOrEmpty(session.ImageUrl) ? "Har bild" : "Saknar bild")" />
+                </div>
+                <div class="d-flex gap-2 flex-shrink-0 ms-auto">
+                    <a asp-page="Edit" asp-route-id="@session.Id" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-pencil"></i> Redigera
+                    </a>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@session.Id"
+                          onsubmit="return confirm('Är du säker på att du vill ta bort @session.Name?')">
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+    <div id="noResults" class="alert alert-info mt-3 d-none">
+        <i class="bi bi-search"></i> Inga övningar matchar dina filter.
+    </div>
+}
+
+@section Scripts {
+    <script>
+        function applyFilters() {
+            const name = document.getElementById('filterName').value.toLowerCase();
+            const diffId = document.getElementById('filterDifficulty').value;
+            const image = document.getElementById('filterImage').value;
+
+            const rows = document.querySelectorAll('.session-row');
+            let visible = 0;
+
+            rows.forEach(row => {
+                const matchName = !name || row.dataset.name.includes(name);
+                const matchDiff = !diffId
+                    || (diffId === 'none' && row.dataset.hasDifficulty === 'no')
+                    || (diffId !== 'none' && row.dataset.difficulties.split(',').includes(diffId));
+                const matchImage = !image || row.dataset.hasImage === image;
+
+                const show = matchName && matchDiff && matchImage;
+                row.classList.toggle('d-none', !show);
+                if (show) visible++;
+            });
+
+            const count = document.getElementById('resultCount');
+            if (count) count.textContent = `Visar ${visible} av ${rows.length} övningar`;
+
+            const noResults = document.getElementById('noResults');
+            if (noResults) noResults.classList.toggle('d-none', visible > 0);
+        }
+
+        function clearFilters() {
+            document.getElementById('filterName').value = '';
+            document.getElementById('filterDifficulty').value = '';
+            document.getElementById('filterImage').value = '';
+            applyFilters();
+        }
+
+        // Initiera räknaren
+        applyFilters();
+    </script>
+}
+

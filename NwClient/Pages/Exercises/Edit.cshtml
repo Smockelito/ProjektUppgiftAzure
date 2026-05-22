@@ -1,0 +1,62 @@
+@page "{id:int}"
+@model NwClient.Pages.Exercises.EditModel
+@{
+    ViewData["Title"] = "Redigera övning";
+}
+
+<div class="d-flex align-items-center gap-3 mb-4">
+    <a asp-page="Index" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Tillbaka</a>
+    <h1 class="h2 mb-0"><i class="bi bi-pencil-square"></i> Redigera övning</h1>
+</div>
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="post">
+                    <input type="hidden" asp-for="Id" />
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Namn <span class="text-danger">*</span></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Beskrivning</label>
+                        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Bild-URL</label>
+                        <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                        <div class="form-text">Valfri URL till en bild för övningen.</div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Svårighetsgrader</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            @foreach (var d in Model.Difficulties)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox"
+                                           name="SelectedDifficultyIds" value="@d.Id"
+                                           id="diff_@d.Id"
+                                           @(Model.SelectedDifficultyIds.Contains(d.Id) ? "checked" : "") />
+                                    <label class="form-check-label" for="diff_@d.Id">@d.CategoryName</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Spara ändringar
+                        </button>
+                        <a asp-page="Index" class="btn btn-outline-secondary">Avbryt</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

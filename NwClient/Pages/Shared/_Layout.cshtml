@@ -30,9 +30,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @{
-                            var isAuthPage = ViewContext.RouteData.Values["page"]?.ToString()?.StartsWith("/Account/") == true;
+                            var currentPage = ViewContext.RouteData.Values["page"]?.ToString() ?? "";
+                            var isPublicPage = currentPage.StartsWith("/Account/") || currentPage == "/Index";
                         }
-                        @if (User.Identity?.IsAuthenticated == true && !isAuthPage)
+                        @if (User.Identity?.IsAuthenticated == true && !isPublicPage)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-white" asp-area="" asp-page="/Exercises/Index">Övningar</a>
@@ -43,13 +44,13 @@
                         }
                     </ul>
                     <ul class="navbar-nav">
-                        @if (User.Identity?.IsAuthenticated == true && !isAuthPage)
+                        @if (User.Identity?.IsAuthenticated == true && !isPublicPage)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-white" asp-area="" asp-page="/Account/Logout">Logga ut</a>
                             </li>
                         }
-                        else if (!User.Identity?.IsAuthenticated == true || isAuthPage)
+                        else if (!User.Identity?.IsAuthenticated == true || isPublicPage)
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-white" asp-area="" asp-page="/Account/Login">Logga in</a>
